@@ -10,6 +10,14 @@ const ReservationAgency = ({ reservation }) => {
   const [status, setStatus] = useState(reservation.status || null);
   const [loading, setLoading] = useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+  
+
   const handleReject = async () => {
     setLoading(true);
     try {

@@ -97,6 +97,13 @@ export default function Mapping({ route }) {
   const [searchResult, setSearchResult] = useState(null);
   const [coords, setCoords] = useState([]);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   useEffect(() => {
     (async () => {
       if (Platform.OS === "android" && !Device.isDevice) {

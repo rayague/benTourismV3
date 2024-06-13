@@ -146,7 +146,7 @@ export default function Register() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoadingOverlay visible={loading} />
+      <LoadingOverlay visible={loading} /> 
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         onScroll={Animated.event(

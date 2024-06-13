@@ -11,6 +11,13 @@ const Booking = () => {
   const [reservations, setReservations] = useState([]);
   const navigation = useNavigation();
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   useEffect(() => {
     const auth = getAuth();
     const user = auth.currentUser;

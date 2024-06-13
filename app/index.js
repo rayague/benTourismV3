@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View, Button, Image } from "react-native";
 import "react-native-gesture-handler";
 import {
@@ -39,12 +39,16 @@ import EditReservationScreen from "../components/EditReservationScreen";
 import Posts from "../screens/Posts";
 import { KkiapayProvider } from "@kkiapay-org/react-native-sdk";
 import TestComponent from "../TestComponent";
+import { userTypeContext } from "../context/userTypeContext";
 
 export default function Page() {
+  const [userType, setUserType] = useState('Papa');
   return (
     <>
+    <userTypeContext.Provider value={{userType, setUserType}}>
       <AuthProvider />
       {/* <KkiapayProvider><TestComponent /></KkiapayProvider> */}
+    </userTypeContext.Provider>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Alert,
   Image,
@@ -16,6 +16,7 @@ import { auth } from "../firebaseConfig"; // Assurez-vous que le chemin est corr
 import LoadingOverlay from "../components/LoadingOverlay";
 import { getUserType } from "../services/UserService"; // Assurez-vous que le chemin est correct
 import { getUserTypeByEmail } from "../services/UserService";
+import { userTypeContext } from "../context/userTypeContext";
 
 const facebook = require("../assets/images/user.png");
 
@@ -24,6 +25,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const {userType, setUserType} = useContext(userTypeContext);
 
   const handleForgotPassword = () => {
     navigation.navigate("Mot de passe oublié");
@@ -53,6 +55,7 @@ export default function Login() {
       const userType = await getUserTypeByEmail(userEmail);
 
       if (userType) {
+        setUserType(userType);
         console.log(`User type found: ${userType}`);
         if (userType === "touriste") {
           console.log("Redirecting to Dashboard Touriste");
@@ -62,7 +65,7 @@ export default function Login() {
           navigation.navigate("Dashboard Agence");
         } else {
           console.log("Unknown user type");
-          Alert.alert("Erreur", "Type d'utilisateur inconnu.");
+          Alert.alert("Erreur", "Type d'utilisateur inconnu."); 
         }
       } else {
         console.log("User type not found");

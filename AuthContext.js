@@ -1,5 +1,5 @@
 // AuthContext.js
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 // import React, {useContext} from 'react';
@@ -46,6 +46,9 @@ import AddEvent from "./components/AddEvent";
 import AddHostel from "./components/AddHostel";
 import AgencyLoginPage from "./screens/AgencyLoginPage";
 import EditProfileTourist from "./components/EditProfileTourist";
+import { userTypeContext } from "./context/userTypeContext";
+import { useNavigation } from "expo-router";
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -53,8 +56,12 @@ const Drawer = createDrawerNavigator();
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  // const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const {userType, setUserType} = useContext(userTypeContext);
+  console.log(userType)
+
 
   console.log(user);
   useEffect(() => {
@@ -70,122 +77,287 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  const drawerContent = (props) => {
+    if (user && userType === "touriste") {
+      return (
+        <>
+          <View style={styles.drawerHeader}>
+            <Image
+              source={require("./assets/images/drawerImage.jpg")}
+              style={styles.drawerImage}
+            />
+          </View>
+          <DrawerItem
+            label="Acceuil"
+            icon={({ color, size }) => (
+              <Ionicons name="home" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Acceuil")}
+          />
+          <DrawerItem
+            label="Nos Cultures"
+            icon={({ color, size }) => (
+              <Ionicons name="leaf" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Nos Cultures")}
+          />
+          <DrawerItem
+            label="Mes Réservations"
+            icon={({ color, size }) => (
+              <Ionicons name="book" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Mes Réservations")}
+          />
+          <DrawerItem
+            label="Messagerie"
+            icon={({ color, size }) => (
+              <Ionicons name="chatbubble" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Messagerie")}
+          />
+          <DrawerItem
+            label="Évènements"
+            icon={({ color, size }) => (
+              <Ionicons name="calendar-outline" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Évènements")}
+          />
+          <DrawerItem
+            label="Agences Touristiques"
+            icon={({ color, size }) => (
+              <Ionicons name="briefcase" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Agences Touristiques")}
+          />
+          <DrawerItem
+            label="Map"
+            icon={({ color, size }) => (
+              <Ionicons name="map" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Map")}
+          />
+          <DrawerItem
+            label="Dashboard Touriste"
+            icon={({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Dashboard Touriste")}
+          />
+          <DrawerItem
+            label="Dashboard Agences"
+            icon={({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            )}
+            onPress={() => navigation.navigate("Dashboard Agence")}
+          />
+        </>
+      );
+    } else if (user && userType === "agence touristique") {
+      return (
+        <>
+          <View style={styles.drawerHeader}>
+            <Image
+              source={require("./assets/images/drawerImage.jpg")}
+              style={styles.drawerImage}
+            />
+          </View>
+          <DrawerItem
+            label="Acceuil"
+            icon={({ color, size }) => (
+              <Ionicons name="home" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Acceuil")}
+          />
+          <DrawerItem
+            label="Nos Cultures"
+            icon={({ color, size }) => (
+              <Ionicons name="leaf" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Nos Cultures")}
+          />
+          <DrawerItem
+            label="Mes Réservations"
+            icon={({ color, size }) => (
+              <Ionicons name="book" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Mes Réservations")}
+          />
+          <DrawerItem
+            label="Messagerie"
+            icon={({ color, size }) => (
+              <Ionicons name="chatbubble" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Messagerie")}
+          />
+          <DrawerItem
+            label="Évènements"
+            icon={({ color, size }) => (
+              <Ionicons name="calendar-outline" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Évènements")}
+          />
+          <DrawerItem
+            label="Map"
+            icon={({ color, size }) => (
+              <Ionicons name="map" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Map")}
+          />
+          <DrawerItem
+            label="Agence Touristique"
+            icon={({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Dashboard Agence")}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <View style={styles.drawerHeader}>
+            <Image
+              source={require("./assets/images/drawerImage.jpg")}
+              style={styles.drawerImage}
+            />
+          </View>
+          <DrawerItem
+            label="Acceuil"
+            icon={({ color, size }) => (
+              <Ionicons name="home" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Acceuil")}
+          />
+          <DrawerItem
+            label="Nos Cultures"
+            icon={({ color, size }) => (
+              <Ionicons name="leaf" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Nos Cultures")}
+          />
+          <DrawerItem
+            label="Mon Compte"
+            icon={({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Mon Compte")}
+          />
+          <DrawerItem
+            label="Map"
+            icon={({ color, size }) => (
+              <Ionicons name="map" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Map")}
+          />
+        </>
+      );
+    }
+  };
+  
   const CustomDrawerContent = (props) => {
     return (
       <DrawerContentScrollView>
-        {user ? (
-          <>
-            <View style={styles.drawerHeader}>
-              <Image
-                source={require("./assets/images/drawerImage.jpg")}
-                style={styles.drawerImage}
-              />
-            </View>
-            <DrawerItem
-              label="Acceuil"
-              icon={({ color, size }) => (
-                <Ionicons name="home" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Acceuil")}
-            />
-            <DrawerItem
-              label="Nos Cultures"
-              icon={({ color, size }) => (
-                <Ionicons name="leaf" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Nos Cultures")}
-            />
-            <DrawerItem
-              label="Mes Réservations"
-              icon={({ color, size }) => (
-                <Ionicons name="book" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Mes Réservations")}
-            />
-            <DrawerItem
-              label="Messagerie"
-              icon={({ color, size }) => (
-                <Ionicons name="chatbubble" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Messagerie")}
-            />
-
-            <DrawerItem
-              label="Évènements"
-              icon={({ color, size }) => (
-                <Ionicons name="calendar-outline" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Évènements")}
-            />
-            <DrawerItem
-              label="Agences Touristiques"
-              icon={({ color, size }) => (
-                <Ionicons name="briefcase" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Agences Touristiques")}
-            />
-            <DrawerItem
-              label="Map"
-              icon={({ color, size }) => (
-                <Ionicons name="map" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Map")}
-            />
-            <DrawerItem
-              label="Dashboard Touriste"
-              icon={({ color, size }) => (
-                <Ionicons name="person" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Dashboard Touriste")}
-            />
-            {/* <DrawerItem
-              label="Dashboard Agences"
-              icon={({ color, size }) => (
-                <Ionicons name="person" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Dashboard Agence")}
-            /> */}
-          </>
-        ) : (
-          <>
-            <View style={styles.drawerHeader}>
-              <Image
-                source={require("./assets/images/drawerImage.jpg")}
-                style={styles.drawerImage}
-              />
-            </View>
-            <DrawerItem
-              label="Acceuil"
-              icon={({ color, size }) => (
-                <Ionicons name="home" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Acceuil")}
-            />
-            <DrawerItem
-              label="Nos Cultures"
-              icon={({ color, size }) => (
-                <Ionicons name="leaf" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Nos Cultures")}
-            />
-            <DrawerItem
-              label="Mon Compte"
-              icon={({ color, size }) => (
-                <Ionicons name="person" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Mon Compte")}
-            />
-            <DrawerItem
-              label="Map"
-              icon={({ color, size }) => (
-                <Ionicons name="map" color={color} size={size} />
-              )}
-              onPress={() => props.navigation.navigate("Map")}
-            />
-          </>
-        )}
+        {
+          drawerContent(props)
+        }
       </DrawerContentScrollView>
     );
+  };
+
+  const drawerScreen = () => {
+    if (user && userType === "touriste") {
+      return (
+        <>
+        <SafeAreaView>
+
+          <Drawer.Screen name="Messagerie" component={Chat} />
+          <Drawer.Screen name="Évènements" component={Event} />
+          <Drawer.Screen name="Agences Touristiques" component={Agency} />
+          <Drawer.Screen name="Acceuil" component={Home} />
+          <Drawer.Screen name="Nos Cultures" component={Infos} />
+          <Drawer.Screen name="Mes Réservations" component={Booking} />
+          <Drawer.Screen name="Map" component={Mapping} />
+          <Drawer.Screen
+            name="Dashboard Touriste"
+            component={DashboardTourist}
+            // options={{drawerItemStyle: {display: 'none'}}}
+          />
+          <Drawer.Screen
+            name="EditReservation"
+            component={EditReservationScreen}
+            // options={{drawerItemStyle: {display: 'none'}}}
+          />
+          <Drawer.Screen
+            name="AddReservation"
+            component={AddReservationScreen}
+            options={{ drawerItemStyle: { display: "none" } }}
+          />
+          <Drawer.Screen
+            name="Dashboard Agence"
+            component={DashboardAgency}
+            // options={{drawerItemStyle: {display: 'none'}}}
+          />
+        </SafeAreaView>
+
+        </>
+      );
+    } else if (user && userType === "agence touristique") {
+      return (
+        <>
+          <Drawer.Screen name="Messagerie" component={Chat} />
+          <Drawer.Screen name="Évènements" component={Event} />
+          <Drawer.Screen name="Acceuil" component={Home} />
+          <Drawer.Screen name="Nos Cultures" component={Infos} />
+          <Drawer.Screen name="Mes Réservations" component={Booking} />
+          <Drawer.Screen name="Map" component={Mapping} />
+          <Drawer.Screen
+            name="Dashboard Touriste"
+            component={DashboardTourist}
+            // options={{drawerItemStyle: {display: 'none'}}}
+          />
+          <Drawer.Screen
+            name="EditReservation"
+            component={EditReservationScreen}
+            // options={{drawerItemStyle: {display: 'none'}}}
+          />
+          <Drawer.Screen
+            name="AddReservation"
+            component={AddReservationScreen}
+            options={{ drawerItemStyle: { display: "none" } }}
+          />
+          <Drawer.Screen
+            name="Dashboard Agence"
+            component={DashboardAgency}
+            // options={{drawerItemStyle: {display: 'none'}}}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Drawer.Screen name="Map" component={Mapping} />
+          <Drawer.Screen name="Acceuil" component={Home} />
+          <Drawer.Screen name="Nos Cultures" component={Infos} />
+          <Drawer.Screen name="Mon Compte" component={Account} />
+          {/* <Drawer.Screen name="Acceuil" component={RegisteredHome} /> */}
+          <Drawer.Screen
+            name="Connexion"
+            component={Login}
+            options={{ drawerItemStyle: { display: "none" } }}
+          />
+          <Drawer.Screen
+            name="Inscription"
+            component={Register}
+            options={{ drawerItemStyle: { display: "none" } }}
+          />
+          <Drawer.Screen
+            name="Mot de passe oublié"
+            component={ForgotPassword}
+            options={{ drawerItemStyle: { display: "none" } }}
+          />
+        </>
+      );
+    }
   };
 
   return (
@@ -195,64 +367,14 @@ const AuthProvider = ({ children }) => {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={screenDrawerOptions}
       >
-        {user ? (
-          <>
-            <Drawer.Screen name="Messagerie" component={Chat} />
-            <Drawer.Screen name="Évènements" component={Event} />
-            <Drawer.Screen name="Agences Touristiques" component={Agency} />
-            <Drawer.Screen name="Acceuil" component={Home} />
-            <Drawer.Screen name="Nos Cultures" component={Infos} />
-            <Drawer.Screen name="Mes Réservations" component={Booking} />
-            <Drawer.Screen name="Map" component={Mapping} />
-            <Drawer.Screen
-              name="Dashboard Touriste"
-              component={DashboardTourist}
-              // options={{drawerItemStyle: {display: 'none'}}}
-            />
-            <Drawer.Screen
-              name="EditReservation"
-              component={EditReservationScreen}
-              // options={{drawerItemStyle: {display: 'none'}}}
-            />
-            <Drawer.Screen
-              name="AddReservation"
-              component={AddReservationScreen}
-              options={{ drawerItemStyle: { display: "none" } }}
-            />
-            <Drawer.Screen
-              name="Dashboard Agence"
-              component={DashboardAgency}
-              // options={{drawerItemStyle: {display: 'none'}}}
-            />
-          </>
-        ) : (
-          <>
-            <Drawer.Screen name="Map" component={Mapping} />
-            <Drawer.Screen name="Acceuil" component={Home} />
-            <Drawer.Screen name="Nos Cultures" component={Infos} />
-            <Drawer.Screen name="Mon Compte" component={Account} />
-            {/* <Drawer.Screen name="Acceuil" component={RegisteredHome} /> */}
-            <Drawer.Screen
-              name="Connexion"
-              component={Login}
-              options={{ drawerItemStyle: { display: "none" } }}
-            />
-            <Drawer.Screen
-              name="Inscription"
-              component={Register}
-              options={{ drawerItemStyle: { display: "none" } }}
-            />
-            <Drawer.Screen
-              name="Mot de passe oublié"
-              component={ForgotPassword}
-              options={{ drawerItemStyle: { display: "none" } }}
-            />
-          </>
-        )}
+        {
+          drawerScreen()
+        }
       </Drawer.Navigator>
     </AuthContext.Provider>
   );
 };
+
 
 function DashboardAgency() {
   return (
@@ -342,10 +464,13 @@ const screenDrawerOptions = {
     height: 90,
     elevation: 10
   },
+  headerTintColor: "white",
   headerTitleStyle: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 30
+    fontSize: 30,
+    elevation: 10,
+    marginBottom: 5,
   },
   tabBarStyle: {
     elevation: 10,

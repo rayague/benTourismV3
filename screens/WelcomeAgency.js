@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Avatar, Card, Title, Paragraph } from "react-native-paper";
@@ -12,6 +13,13 @@ import { useNavigation } from "@react-navigation/native";
 
 const DashboardScreen = () => {
   const navigation = useNavigation();
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const navigateToReservations = () => {
     navigation.navigate("Notifications Agence");
@@ -34,7 +42,10 @@ const DashboardScreen = () => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView  contentContainerStyle={styles.scrollView}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Tableau de Bord</Text>

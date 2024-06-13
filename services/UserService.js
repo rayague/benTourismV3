@@ -9,8 +9,8 @@ import firebaseConfig from "../firebaseConfig";
 
 // Fonction pour récupérer l'UUID de l'utilisateur à partir de l'e-mail
 export const getUUIDByEmail = async (email) => {
-  const firestore = getFirestore(firebaseConfig);
 
+  const firestore = getFirestore(firebaseConfig);
   try {
     // Requête pour obtenir l'utilisateur avec cet email
     const q = query(collection(firestore, "User"), where("email", "==", email));

@@ -22,6 +22,13 @@ const Agency = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   useEffect(() => {
     // Récupérer les données des agences touristiques depuis Firestore
     const fetchAgencies = async () => {

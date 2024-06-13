@@ -9,6 +9,15 @@ import {
 import React from 'react';
 
 export default function CulturesList() {
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  
   return (
     <SafeAreaView>
       <ScrollView

@@ -6,7 +6,8 @@ import {
   FlatList,
   TouchableOpacity,
   Dimensions,
-  Image
+  Image,
+  RefreshControl,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +18,13 @@ const WelcomeTourist = () => {
   const navigation = useNavigation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const carouselItems = [
     {

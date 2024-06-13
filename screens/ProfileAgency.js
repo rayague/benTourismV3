@@ -20,9 +20,10 @@ export default function ProfileAgency() {
     const fetchUserData = async () => {
       try {
         const currentUser = auth.currentUser;
+        console.log(currentUser);
         if (currentUser) {
           const q = query(
-            collection(db, "Agencies"),
+            collection(db, "agencies"),
             where("email", "==", currentUser.email)
           );
           const querySnapshot = await getDocs(q);
@@ -47,12 +48,16 @@ export default function ProfileAgency() {
   }, []);
 
   const handleSignOut = async () => {
+    setLoading(true);
+
     try {
       await signOut(auth);
       navigation.navigate("Accueil");
     } catch (error) {
       console.error("Error signing out: ", error);
     }
+    setLoading(false);
+
   };
 
   return (
