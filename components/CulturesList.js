@@ -4,12 +4,11 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-} from 'react-native';
-import React from 'react';
+  ScrollView
+} from "react-native";
+import React from "react";
 
 export default function CulturesList() {
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -17,22 +16,26 @@ export default function CulturesList() {
     }, 2000);
   }, []);
 
-  
   return (
     <SafeAreaView>
       <ScrollView
         horizontal={false}
         showsVerticalScrollIndicator={false}
-        style={styles.container}>
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={[styles.card, styles.elevatedCard]}></View>
         <Text style={styles.headingText}>Découvrez avec nous</Text>
         <View>
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://mediapartbenin.com/upload/thumbnails/0861413001698215290.jpeg',
+                  uri: "https://mediapartbenin.com/upload/thumbnails/0861413001698215290.jpeg"
                 }}
                 style={styles.cardImage}
               />
@@ -55,10 +58,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://www.nomade-aventure.com/content/images/imgproduits/ben/10914/479772_carre_lg.ori.jpg',
+                  uri: "https://www.nomade-aventure.com/content/images/imgproduits/ben/10914/479772_carre_lg.ori.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -79,10 +83,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://destinationafrique.io/wp-content/uploads/2021/10/Adepte-Sakpata-vodoun-Benin.jpg',
+                  uri: "https://destinationafrique.io/wp-content/uploads/2021/10/Adepte-Sakpata-vodoun-Benin.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -101,10 +106,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://prod.cdn-medias.jeuneafrique.com/cdn-cgi/image/q=auto,f=auto,metadata=none,width=1280,height=960,fit=cover,gravity=0.4861x0.2574/https://prod.cdn-medias.jeuneafrique.com/medias/2024/01/31/jad20240131-cm-benin-musee-vodun.jpg',
+                  uri: "https://prod.cdn-medias.jeuneafrique.com/cdn-cgi/image/q=auto,f=auto,metadata=none,width=1280,height=960,fit=cover,gravity=0.4861x0.2574/https://prod.cdn-medias.jeuneafrique.com/medias/2024/01/31/jad20240131-cm-benin-musee-vodun.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -123,10 +129,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://benin.auletch.com/wp-content/uploads/sites/4/2020/11/mahi-min.jpg',
+                  uri: "https://benin.auletch.com/wp-content/uploads/sites/4/2020/11/mahi-min.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -146,10 +153,11 @@ export default function CulturesList() {
             </View>
             <View>
               <View
-                style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+                style={[styles.card, styles.cardElevated, styles.alignCenter]}
+              >
                 <Image
                   source={{
-                    uri: 'https://agricultureaufeminin.wordpress.com/wp-content/uploads/2017/08/igname-3.jpg',
+                    uri: "https://agricultureaufeminin.wordpress.com/wp-content/uploads/2017/08/igname-3.jpg"
                   }}
                   style={styles.cardImage}
                 />
@@ -174,10 +182,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Zangpetos_running.jpg/1200px-Zangpetos_running.jpg',
+                  uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Zangpetos_running.jpg/1200px-Zangpetos_running.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -198,10 +207,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://beninwebtv.com/wp-content/uploads/2021/10/I0000vg7l1b55rqk-1.jpg',
+                  uri: "https://beninwebtv.com/wp-content/uploads/2021/10/I0000vg7l1b55rqk-1.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -223,10 +233,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://i.ytimg.com/vi/LpXpQSAWkIQ/maxresdefault.jpg',
+                  uri: "https://i.ytimg.com/vi/LpXpQSAWkIQ/maxresdefault.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -248,10 +259,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://miro.medium.com/v2/resize:fit:1200/1*-1-ytKUv9Q004UjK68uCeg.jpeg',
+                  uri: "https://miro.medium.com/v2/resize:fit:1200/1*-1-ytKUv9Q004UjK68uCeg.jpeg"
                 }}
                 style={styles.cardImage}
               />
@@ -273,10 +285,11 @@ export default function CulturesList() {
 
           <View>
             <View
-              style={[styles.card, styles.cardElevated, styles.alignCenter]}>
+              style={[styles.card, styles.cardElevated, styles.alignCenter]}
+            >
               <Image
                 source={{
-                  uri: 'https://afroculture.net/wp-content/uploads/2017/02/couple-noir-en-tenue-kente10.jpg',
+                  uri: "https://afroculture.net/wp-content/uploads/2017/02/couple-noir-en-tenue-kente10.jpg"
                 }}
                 style={styles.cardImage}
               />
@@ -306,30 +319,30 @@ export default function CulturesList() {
 const styles = StyleSheet.create({
   headingText: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingHorizontal: 8,
-    paddingVertical: 10,
+    paddingVertical: 10
   },
   alignCenter: {
     // flex:1,
     // justifyContent:'center',
-    alignItems: 'center',
+    alignItems: "center"
   },
   card: {
     // width: 320,
     // height: 280,
     // backgroundColor:'gray'
-    elevation: 20,
+    elevation: 20
   },
   cardElevated: {
     //    backgroundColor:'#ffffff',
-    // elevation:3, 
+    // elevation:3,
     elevation: 20,
 
     shadowOffset: {
       width: 1,
-      height: 1,
-    },
+      height: 1
+    }
   },
   cardImage: {
     width: 330,
@@ -341,47 +354,44 @@ const styles = StyleSheet.create({
     // borderTopEndRadius:10,
     // marginHorizontal:15,
     // marginVertical:12,
-    elevation: 10,
-
+    elevation: 10
   },
   cardBody: {
     flex: 1,
     flexGrow: 1,
-    backgroundColor: '#ffffff',
-    paddingBottom: 20, 
+    backgroundColor: "#ffffff",
+    paddingBottom: 20,
     marginHorizontal: 15,
     // marginVertical:0,
     marginBottom: 20,
     paddingHorizontal: 5,
     elevation: 20,
-        borderBottomRightRadius: 8,
-    borderBottomLeftRadius: 8,
-
-    
+    borderBottomRightRadius: 8,
+    borderBottomLeftRadius: 8
   },
   cardTitle: {
-    color: '#000000',
+    color: "#000000",
     fontSize: 23,
-    fontWeight: 'bold',
-    textAlign: 'auto',
-    marginBottom: 4,
+    fontWeight: "bold",
+    textAlign: "auto",
+    marginBottom: 4
   },
   cardLabel: {
-    color: '#111',
+    color: "#111",
     fontSize: 18,
-    fontWeight: '400',
-    marginBottom: 6,
+    fontWeight: "400",
+    marginBottom: 6
   },
   cardDescription: {
-    color: '#333333',
+    color: "#333333",
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
     marginBottom: 10,
-    marginTop: 5,
+    marginTop: 5
   },
   cardFooter: {
-    color: '#000000',
+    color: "#000000",
     fontSize: 16,
-    fontWeight: '600',
-  },
+    fontWeight: "600"
+  }
 });

@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  RefreshControl,
+  RefreshControl
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Avatar, Card, Title, Paragraph } from "react-native-paper";
@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const DashboardScreen = () => {
   const navigation = useNavigation();
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -41,11 +42,17 @@ const DashboardScreen = () => {
     navigation.navigate("Ajouter un hotel");
   };
 
+  const navigateToTickets = () => {
+    navigation.navigate("Tiquets Générés");
+  };
+
   return (
-    <ScrollView  contentContainerStyle={styles.scrollView}
-    refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
+    <ScrollView
+      contentContainerStyle={styles.scrollView}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Tableau de Bord</Text>
@@ -88,7 +95,7 @@ const DashboardScreen = () => {
               </Card.Content>
             </Card>
           </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToSettings}>
+          <TouchableOpacity onPress={navigateToTickets}>
             <Card style={styles.card}>
               <Card.Content>
                 <FontAwesome

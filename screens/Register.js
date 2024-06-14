@@ -42,6 +42,13 @@ export default function Register() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const scrollY = new Animated.Value(0);
 
   const animatedStyles = scrollY.interpolate({
@@ -146,7 +153,7 @@ export default function Register() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoadingOverlay visible={loading} /> 
+      <LoadingOverlay visible={loading} />
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         onScroll={Animated.event(

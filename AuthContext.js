@@ -3,7 +3,14 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 // import React, {useContext} from 'react';
-import { StyleSheet, Text, View, Button, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  SafeAreaView
+} from "react-native";
 import "react-native-gesture-handler";
 import {
   createDrawerNavigator,
@@ -47,8 +54,10 @@ import AddHostel from "./components/AddHostel";
 import AgencyLoginPage from "./screens/AgencyLoginPage";
 import EditProfileTourist from "./components/EditProfileTourist";
 import { userTypeContext } from "./context/userTypeContext";
+import TicketAgency from "./screens/TicketAgency";
+import TikectTourist from "./screens/TikectTourist";
+import ReservationAgency from "./screens/ReservationAgency";
 import { useNavigation } from "expo-router";
-
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -59,9 +68,8 @@ const AuthProvider = ({ children }) => {
   // const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {userType, setUserType} = useContext(userTypeContext);
-  console.log(userType)
-
+  const { userType, setUserType } = useContext(userTypeContext);
+  console.log(userType);
 
   console.log(user);
   useEffect(() => {
@@ -130,7 +138,14 @@ const AuthProvider = ({ children }) => {
             onPress={() => props.navigation.navigate("Agences Touristiques")}
           />
           <DrawerItem
-            label="Map"
+            label="Carte Géographique"
+            icon={({ color, size }) => (
+              <Ionicons name="map" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Map")}
+          />
+          <DrawerItem
+            label="Mes Tickets"
             icon={({ color, size }) => (
               <Ionicons name="map" color={color} size={size} />
             )}
@@ -142,13 +157,6 @@ const AuthProvider = ({ children }) => {
               <Ionicons name="person" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Dashboard Touriste")}
-          />
-          <DrawerItem
-            label="Dashboard Agences"
-            icon={({ color, size }) => (
-              <Ionicons name="person" color={color} size={size} />
-            )}
-            onPress={() => navigation.navigate("Dashboard Agence")}
           />
         </>
       );
@@ -176,7 +184,7 @@ const AuthProvider = ({ children }) => {
             onPress={() => props.navigation.navigate("Nos Cultures")}
           />
           <DrawerItem
-            label="Mes Réservations"
+            label="Notifications Réservations"
             icon={({ color, size }) => (
               <Ionicons name="book" color={color} size={size} />
             )}
@@ -197,7 +205,14 @@ const AuthProvider = ({ children }) => {
             onPress={() => props.navigation.navigate("Évènements")}
           />
           <DrawerItem
-            label="Map"
+            label="Postes"
+            icon={({ color, size }) => (
+              <Ionicons name="calendar-outline" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Évènements")}
+          />
+          <DrawerItem
+            label="Carte Géographique"
             icon={({ color, size }) => (
               <Ionicons name="map" color={color} size={size} />
             )}
@@ -209,6 +224,13 @@ const AuthProvider = ({ children }) => {
               <Ionicons name="person" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Dashboard Agence")}
+          />
+          <DrawerItem
+            label="Tickets Générés"
+            icon={({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Tiquets Générés")}
           />
         </>
       );
@@ -236,14 +258,14 @@ const AuthProvider = ({ children }) => {
             onPress={() => props.navigation.navigate("Nos Cultures")}
           />
           <DrawerItem
-            label="Mon Compte"
+            label="S'identifier"
             icon={({ color, size }) => (
               <Ionicons name="person" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Mon Compte")}
           />
           <DrawerItem
-            label="Map"
+            label="Carte Géographique"
             icon={({ color, size }) => (
               <Ionicons name="map" color={color} size={size} />
             )}
@@ -253,14 +275,10 @@ const AuthProvider = ({ children }) => {
       );
     }
   };
-  
+
   const CustomDrawerContent = (props) => {
     return (
-      <DrawerContentScrollView>
-        {
-          drawerContent(props)
-        }
-      </DrawerContentScrollView>
+      <DrawerContentScrollView>{drawerContent(props)}</DrawerContentScrollView>
     );
   };
 
@@ -268,12 +286,11 @@ const AuthProvider = ({ children }) => {
     if (user && userType === "touriste") {
       return (
         <>
-        <SafeAreaView>
-
           <Drawer.Screen name="Messagerie" component={Chat} />
           <Drawer.Screen name="Évènements" component={Event} />
           <Drawer.Screen name="Agences Touristiques" component={Agency} />
           <Drawer.Screen name="Acceuil" component={Home} />
+          <Drawer.Screen name="Tiquets Touristes" component={TikectTourist} />
           <Drawer.Screen name="Nos Cultures" component={Infos} />
           <Drawer.Screen name="Mes Réservations" component={Booking} />
           <Drawer.Screen name="Map" component={Mapping} />
@@ -285,20 +302,13 @@ const AuthProvider = ({ children }) => {
           <Drawer.Screen
             name="EditReservation"
             component={EditReservationScreen}
-            // options={{drawerItemStyle: {display: 'none'}}}
+            options={{ drawerItemStyle: { display: "none" } }}
           />
           <Drawer.Screen
             name="AddReservation"
             component={AddReservationScreen}
             options={{ drawerItemStyle: { display: "none" } }}
           />
-          <Drawer.Screen
-            name="Dashboard Agence"
-            component={DashboardAgency}
-            // options={{drawerItemStyle: {display: 'none'}}}
-          />
-        </SafeAreaView>
-
         </>
       );
     } else if (user && userType === "agence touristique") {
@@ -310,6 +320,11 @@ const AuthProvider = ({ children }) => {
           <Drawer.Screen name="Nos Cultures" component={Infos} />
           <Drawer.Screen name="Mes Réservations" component={Booking} />
           <Drawer.Screen name="Map" component={Mapping} />
+          <Drawer.Screen name="Tiquets Générés" component={TicketAgency} />
+          <Drawer.Screen
+            name="Réservations Agences"
+            component={ReservationAgency}
+          />
           <Drawer.Screen
             name="Dashboard Touriste"
             component={DashboardTourist}
@@ -367,14 +382,11 @@ const AuthProvider = ({ children }) => {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={screenDrawerOptions}
       >
-        {
-          drawerScreen()
-        }
+        {drawerScreen()}
       </Drawer.Navigator>
     </AuthContext.Provider>
   );
 };
-
 
 function DashboardAgency() {
   return (
@@ -470,7 +482,7 @@ const screenDrawerOptions = {
     fontWeight: "bold",
     fontSize: 30,
     elevation: 10,
-    marginBottom: 5,
+    marginBottom: 5
   },
   tabBarStyle: {
     elevation: 10,

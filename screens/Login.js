@@ -8,7 +8,8 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -26,6 +27,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const {userType, setUserType} = useContext(userTypeContext);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const handleForgotPassword = () => {
     navigation.navigate("Mot de passe oublié");
@@ -83,7 +92,10 @@ export default function Login() {
   return (
     <SafeAreaView style={styles.container}>
       {loading && <LoadingOverlay />}
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}         
+      refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <Image source={facebook} style={styles.image} resizeMode="contain" />
         <View style={styles.inputView}>
           <TextInput

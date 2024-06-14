@@ -52,12 +52,11 @@ export default function ProfileAgency() {
 
     try {
       await signOut(auth);
-      navigation.navigate("Accueil");
+      navigation.navigate("Acceuil");
     } catch (error) {
       console.error("Error signing out: ", error);
     }
     setLoading(false);
-
   };
 
   return (

@@ -5,21 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
-  FlatList
+  Alert
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import {
-  doc,
-  onSnapshot,
-  deleteDoc,
-  collection,
-  query,
-  where,
-  getDocs
-} from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { Button } from "react-native-paper";
 
@@ -172,59 +162,6 @@ const ReservationItem = ({ reservation }) => {
   );
 };
 
-const ReservationsList = () => {
-  const [reservations, setReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchReservations = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!user) {
-        Alert.alert("Erreur", "Utilisateur non connecté.");
-        setLoading(false);
-        return;
-      }
-
-      const reservationsRef = collection(db, "booking");
-      const q = query(reservationsRef, where("email", "==", user.email));
-
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const reservationsData = [];
-        querySnapshot.forEach((doc) => {
-          reservationsData.push({ id: doc.id, ...doc.data() });
-        });
-        setReservations(reservationsData);
-        setLoading(false);
-      });
-
-      return () => unsubscribe();
-    };
-
-    fetchReservations();
-  }, []);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
-
-  if (reservations.length === 0) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Aucune réservation trouvée.</Text>
-      </View>
-    );
-  }
-
-  return (
-    <FlatList
-      data={reservations}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <ReservationItem reservation={item} />}
-    />
-  );
-};
-
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
@@ -274,16 +211,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     marginTop: 10,
     backgroundColor: "red"
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  emptyText: {
-    fontSize: 18,
-    color: "#666"
   }
 });
 
-export default ReservationsList;
+export default ReservationItem;

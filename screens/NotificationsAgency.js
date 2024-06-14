@@ -1,108 +1,172 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
 import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  getDocs
-} from "firebase/firestore";
-import { auth, db } from "../firebaseConfig";
-import ReservationAgency from "../components/ReservationAgency";
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Button
+} from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { getAuth } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
-const NotificationsAgency = () => {
+const ReservationAgency = () => {
   const [reservations, setReservations] = useState([]);
-  const [agencyId, setAgencyId] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the current agency ID
-    const fetchAgencyId = async () => {
-      try {
-        const currentUser = auth.currentUser;
-        if (currentUser) {
-          const agencyQuery = query(
-            collection(db, "Agency"),
-            where("uid", "==", currentUser.uid)
+    const fetchReservations = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user) {
+        try {
+          const q = query(
+            collection(db, "booking"),
+            where("name", "==", user.displayName) // Modification ici
           );
-          const agencySnapshot = await getDocs(agencyQuery);
-          if (!agencySnapshot.empty) {
-            const agencyDoc = agencySnapshot.docs[0];
-            setAgencyId(agencyDoc.id);
-            console.log("Agency ID: ", agencyDoc.id); // Log Agency ID for debugging
-          } else {
-            console.log("No such document for the agency!");
-          }
+          const querySnapshot = await getDocs(q);
+          const reservationsData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setReservations(reservationsData);
+        } catch (error) {
+          console.error("Error fetching reservations:", error);
+          Alert.alert(
+            "Erreur",
+            "Erreur lors de la récupération des réservations."
+          );
         }
-      } catch (error) {
-        console.error("Error fetching agency ID: ", error);
-      } finally {
-        setLoading(false);
+      } else {
+        console.log("No user is logged in");
+        Alert.alert("Erreur", "Utilisateur non connecté.");
       }
+
+      setLoading(false);
     };
 
-    fetchAgencyId();
+    fetchReservations();
   }, []);
 
-  useEffect(() => {
-    if (agencyId) {
-      // Fetch reservations for the current agency
-      const q = query(
-        collection(db, "bookings"),
-        where("agencyId", "==", agencyId)
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const reservationsList = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setReservations(reservationsList);
-        console.log("Reservations: ", reservationsList); // Log reservations for debugging
-      });
-
-      return () => unsubscribe();
-    }
-  }, [agencyId]);
+  const renderReservation = ({ item: reservation }) => (
+    <View style={styles.card}>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons
+          name="office-building"
+          size={20}
+          color="black"
+        />
+        <Text style={styles.title}>
+          {reservation.agency || "Agence non disponible"}
+        </Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons name="map-marker" size={20} color="black" />
+        <Text style={styles.description}>{`Site: ${
+          reservation.site || "Non disponible"
+        }`}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons name="currency-usd" size={20} color="black" />
+        <Text style={styles.description}>{`Montant: ${
+          reservation.amount || "Non disponible"
+        }`}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons name="account-group" size={20} color="black" />
+        <Text style={styles.description}>{`Nombre de personnes: ${
+          reservation.numberOfPeople || "Non disponible"
+        }`}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons name="tag" size={20} color="black" />
+        <Text style={styles.description}>{`Prix: ${
+          reservation.price || "Non disponible"
+        }`}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons name="calendar" size={20} color="black" />
+        <Text style={styles.description}>{`Date: ${
+          new Date(reservation.date.seconds * 1000).toLocaleDateString() ||
+          "Non disponible"
+        }`}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <MaterialCommunityIcons name="clock" size={20} color="black" />
+        <Text style={styles.description}>{`Heure: ${
+          reservation.time || "Non disponible"
+        }`}</Text>
+      </View>
+      {reservation.status === "rejected" && (
+        <Text style={styles.rejectedText}>Demande rejetée</Text>
+      )}
+      {reservation.status === "accepted" && (
+        <Button
+          title="Générer un ticket"
+          onPress={() => {
+            /* handle ticket generation */
+          }}
+        />
+      )}
+    </View>
+  );
 
   if (loading) {
     return (
-      <View style={styles.loader}>
-        <Text>Loading...</Text>
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {reservations.length === 0 ? (
-        <Text style={styles.noDataText}>Aucune réservation trouvée</Text>
-      ) : (
-        <FlatList
-          data={reservations}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <ReservationAgency reservation={item} />}
-          contentContainerStyle={{ padding: 20 }}
-        />
-      )}
-    </View>
+    <FlatList
+      data={reservations}
+      renderItem={renderReservation}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.list}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20
+  card: {
+    marginBottom: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    backgroundColor: "#fff"
   },
-  noDataText: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "gray"
-  },
-  loader: {
+  loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  list: {
+    padding: 20
+  },
+  infoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5
+  },
+  title: {
+    marginLeft: 10,
+    fontWeight: "bold"
+  },
+  description: {
+    marginLeft: 10
+  },
+  rejectedText: {
+    color: "red",
+    fontWeight: "bold",
+    marginTop: 10
   }
 });
 
-export default NotificationsAgency;
+export default ReservationAgency;

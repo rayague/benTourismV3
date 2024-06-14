@@ -69,7 +69,6 @@ const touristicSiteData = [
     image:
       "https://www.voyage-benin.com/cdn/bj-public/shutterstock_1150989716.jpg",
     price: 5100.0
-
   },
   {
     title: "Palais des Rois d'Allada",
@@ -120,7 +119,6 @@ const touristicSiteData = [
     image:
       "https://www.ecobenin.org/wp-content/uploads/Possotome_cocotier_plage_chez_prefet_pilotis_lac_aheme_ecotourisme_ecobenin_benin.jpg",
     price: 5100.0
-
   },
   {
     title: "Parc National de la Pendjari",
@@ -148,7 +146,7 @@ const touristicSiteData = [
     locationOnMap: { latitude: 7.7453, longitude: 2.1681 },
     description:
       "A Dassa-Zoumé, la Grotte de la Vierge est une petite grotte, creusée en bas d’une colline, où serait apparue la Vierge. Elle est donc vite devenue un sanctuaire marial. Alors, tous les ans, vers le 15 août, un pèlerinage y draine des foules très nombreuses venant de tout le Bénin, mais même des pays voisins de la sous-région. Devant la grotte Arigbo, c’est son nom officiel, une",
-      image:
+    image:
       "https://upload.wikimedia.org/wikipedia/commons/8/81/Grotte_mariale_d%27Arigbo_.jpg",
     price: 7500.0
   }
