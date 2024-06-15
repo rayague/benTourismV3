@@ -27,12 +27,17 @@ const AddReservationScreen = ({ navigation }) => {
     site: "",
     agency: "",
     agencyId: "",
+    agencyEmail: "", // Ajout de l'e-mail de l'agence
     price: 15000,
     numberOfPeople: "",
     amount: "",
     date: new Date(),
     time: "",
-    status: "en attente"
+    status: "en attente",
+    // Ajout des informations de l'utilisateur
+    firstName: "",
+    lastName: "",
+    nationality: ""
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [agencies, setAgencies] = useState([]);
@@ -64,7 +69,8 @@ const AddReservationScreen = ({ navigation }) => {
         setFormData({
           ...formData,
           agency: selectedAgency.name,
-          agencyId: value
+          agencyId: value,
+          agencyEmail: selectedAgency.email // Récupération de l'e-mail de l'agence
         });
       }
     } else {
@@ -129,7 +135,11 @@ const AddReservationScreen = ({ navigation }) => {
         ...formData,
         email: user.email, // Ajouter l'email de l'utilisateur connecté
         site: formData.selectedSite, // Inclure les données complètes du site touristique
-        amount: formData.price * formData.numberOfPeople
+        amount: formData.price * formData.numberOfPeople,
+        // Ajouter les informations de l'utilisateur
+        firstName: user.displayName ? user.displayName.split(" ")[0] : "",
+        lastName: user.displayName ? user.displayName.split(" ")[1] : "",
+        nationality: user.nationality ? user.nationality : ""
       });
       navigation.navigate("Mes Réservations");
     } catch (error) {

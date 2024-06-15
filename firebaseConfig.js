@@ -205,7 +205,7 @@ const seedCollection = async (collectionName, data) => {
 };
 
 // Seed les données des agences et des sites touristiques
-// seedCollection('agencies', agencyData);
+// seedCollection("agencies", agencyData);
 // seedCollection('touristicSites', touristicSiteData);
 // seedCollection("User", agenciesData);
 

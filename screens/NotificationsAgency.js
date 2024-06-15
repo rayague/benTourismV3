@@ -6,27 +6,49 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Button
+  Button,
+  Pressable
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { getAuth } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc
+} from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
-const ReservationAgency = () => {
+const NotificationsAgency = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        console.log("No user is logged in");
+        Alert.alert("Erreur", "Utilisateur non connecté.");
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
       if (user) {
         try {
           const q = query(
             collection(db, "booking"),
-            where("name", "==", user.displayName) // Modification ici
+            where("agencyEmail", "==", user.email)
           );
           const querySnapshot = await getDocs(q);
           const reservationsData = querySnapshot.docs.map((doc) => ({
@@ -41,16 +63,46 @@ const ReservationAgency = () => {
             "Erreur lors de la récupération des réservations."
           );
         }
-      } else {
-        console.log("No user is logged in");
-        Alert.alert("Erreur", "Utilisateur non connecté.");
       }
-
       setLoading(false);
     };
 
     fetchReservations();
-  }, []);
+  }, [user]);
+
+  const handleAccept = async (reservationId) => {
+    try {
+      const reservationRef = doc(db, "booking", reservationId);
+      await updateDoc(reservationRef, { status: "accepted" });
+      setReservations((prevReservations) =>
+        prevReservations.map((reservation) =>
+          reservation.id === reservationId
+            ? { ...reservation, status: "accepted" }
+            : reservation
+        )
+      );
+    } catch (error) {
+      console.error("Error accepting reservation:", error);
+      Alert.alert("Erreur", "Erreur lors de l'acceptation de la réservation.");
+    }
+  };
+
+  const handleReject = async (reservationId) => {
+    try {
+      const reservationRef = doc(db, "booking", reservationId);
+      await updateDoc(reservationRef, { status: "rejected" });
+      setReservations((prevReservations) =>
+        prevReservations.map((reservation) =>
+          reservation.id === reservationId
+            ? { ...reservation, status: "rejected" }
+            : reservation
+        )
+      );
+    } catch (error) {
+      console.error("Error rejecting reservation:", error);
+      Alert.alert("Erreur", "Erreur lors du rejet de la réservation.");
+    }
+  };
 
   const renderReservation = ({ item: reservation }) => (
     <View style={styles.card}>
@@ -102,15 +154,26 @@ const ReservationAgency = () => {
         }`}</Text>
       </View>
       {reservation.status === "rejected" && (
-        <Text style={styles.rejectedText}>Demande rejetée</Text>
+        <Text style={styles.rejectedText}>Réservation rejetée</Text>
       )}
-      {reservation.status === "accepted" && (
+      {reservation.status === "accepted" ? (
         <Button
           title="Générer un ticket"
           onPress={() => {
             /* handle ticket generation */
           }}
         />
+      ) : (
+        <>
+          <Button
+            title="Accepter la demande"
+            onPress={() => handleAccept(reservation.id)}
+          />
+          <Button
+            title="Refuser la demande"
+            onPress={() => handleReject(reservation.id)}
+          />
+        </>
       )}
     </View>
   );
@@ -140,7 +203,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    elevation: 10
   },
   loaderContainer: {
     flex: 1,
@@ -169,4 +233,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ReservationAgency;
+export default NotificationsAgency;
