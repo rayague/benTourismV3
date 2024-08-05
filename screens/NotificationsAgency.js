@@ -6,11 +6,11 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Button,
-  Pressable
+  Button
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { getAuth } from "firebase/auth";
+import { requestMediaLibraryPermissions } from "../components/requestMediaLibraryPermissions"; // Importez votre fonction ici
 import {
   collection,
   getDocs,
@@ -20,11 +20,13 @@ import {
   doc
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import generateTicket from "../components/generateTicket";
 
 const NotificationsAgency = () => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [actionLoading, setActionLoading] = useState(null); // For individual action loading
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -70,7 +72,24 @@ const NotificationsAgency = () => {
     fetchReservations();
   }, [user]);
 
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const granted = await requestMediaLibraryPermissions();
+      if (!granted) {
+        // Gérer le cas où la permission est refusée
+        Alert.alert(
+          "Permission nécessaire",
+          "Vous devez accorder la permission d'accès à la bibliothèque multimédia pour générer des tickets."
+        );
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
   const handleAccept = async (reservationId) => {
+    setActionLoading(reservationId);
+    console.log(`Accepting reservation ${reservationId}`);
     try {
       const reservationRef = doc(db, "booking", reservationId);
       await updateDoc(reservationRef, { status: "accepted" });
@@ -81,13 +100,18 @@ const NotificationsAgency = () => {
             : reservation
         )
       );
+      console.log(`Reservation ${reservationId} accepted`);
     } catch (error) {
       console.error("Error accepting reservation:", error);
       Alert.alert("Erreur", "Erreur lors de l'acceptation de la réservation.");
+    } finally {
+      setActionLoading(null);
     }
   };
 
   const handleReject = async (reservationId) => {
+    setActionLoading(reservationId);
+    console.log(`Rejecting reservation ${reservationId}`);
     try {
       const reservationRef = doc(db, "booking", reservationId);
       await updateDoc(reservationRef, { status: "rejected" });
@@ -98,9 +122,12 @@ const NotificationsAgency = () => {
             : reservation
         )
       );
+      console.log(`Reservation ${reservationId} rejected`);
     } catch (error) {
       console.error("Error rejecting reservation:", error);
       Alert.alert("Erreur", "Erreur lors du rejet de la réservation.");
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -154,26 +181,35 @@ const NotificationsAgency = () => {
         }`}</Text>
       </View>
       {reservation.status === "rejected" && (
-        <Text style={styles.rejectedText}>Réservation rejetée</Text>
+        <Text style={styles.rejectedText}>Demande rejetée</Text>
       )}
-      {reservation.status === "accepted" ? (
+      {reservation.status === "accepted" && (
         <Button
           title="Générer un ticket"
           onPress={() => {
-            /* handle ticket generation */
+            console.log(`Generating ticket for reservation ${reservation.id}`);
+            generateTicket(reservation.id);
           }}
         />
-      ) : (
-        <>
-          <Button
-            title="Accepter la demande"
-            onPress={() => handleAccept(reservation.id)}
-          />
-          <Button
-            title="Refuser la demande"
-            onPress={() => handleReject(reservation.id)}
-          />
-        </>
+      )}
+      {reservation.status === "en attente" && (
+        <View style={styles.buttonContainer}>
+          {actionLoading === reservation.id ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <>
+              <Button
+                title="Accepter la demande"
+                onPress={() => handleAccept(reservation.id)}
+              />
+              <View style={{ width: 20, height: 20 }} />
+              <Button
+                title="Refuser la demande"
+                onPress={() => handleReject(reservation.id)}
+              />
+            </>
+          )}
+        </View>
       )}
     </View>
   );
@@ -229,6 +265,11 @@ const styles = StyleSheet.create({
   rejectedText: {
     color: "red",
     fontWeight: "bold",
+    marginTop: 10
+  },
+  buttonContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
     marginTop: 10
   }
 });

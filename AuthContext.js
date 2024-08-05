@@ -200,14 +200,14 @@ const AuthProvider = ({ children }) => {
           <DrawerItem
             label="Évènements"
             icon={({ color, size }) => (
-              <Ionicons name="calendar-outline" color={color} size={size} />
+              <Ionicons name="calendar" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Évènements")}
           />
           <DrawerItem
             label="Postes"
             icon={({ color, size }) => (
-              <Ionicons name="calendar-outline" color={color} size={size} />
+              <Ionicons name="megaphone" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Évènements")}
           />
@@ -228,7 +228,7 @@ const AuthProvider = ({ children }) => {
           <DrawerItem
             label="Tickets Générés"
             icon={({ color, size }) => (
-              <Ionicons name="person" color={color} size={size} />
+              <Ionicons name="document-text" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Tiquets Générés")}
           />
@@ -258,18 +258,18 @@ const AuthProvider = ({ children }) => {
             onPress={() => props.navigation.navigate("Nos Cultures")}
           />
           <DrawerItem
-            label="S'identifier"
-            icon={({ color, size }) => (
-              <Ionicons name="person" color={color} size={size} />
-            )}
-            onPress={() => props.navigation.navigate("Mon Compte")}
-          />
-          <DrawerItem
             label="Carte Géographique"
             icon={({ color, size }) => (
               <Ionicons name="map" color={color} size={size} />
             )}
             onPress={() => props.navigation.navigate("Map")}
+          />
+          <DrawerItem
+            label="S'identifier"
+            icon={({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            )}
+            onPress={() => props.navigation.navigate("Mon Compte")}
           />
         </>
       );

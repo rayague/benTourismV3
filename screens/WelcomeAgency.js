@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  Pressable
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { Avatar, Card, Title, Paragraph } from "react-native-paper";
@@ -81,7 +82,7 @@ const DashboardScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.cardsContainer}>
-          <TouchableOpacity onPress={navigateToReservations}>
+          <Pressable onPress={navigateToReservations}>
             <Card style={styles.card}>
               <Card.Content>
                 <FontAwesome
@@ -94,8 +95,8 @@ const DashboardScreen = () => {
                 <Paragraph>Gérez vos réservations</Paragraph>
               </Card.Content>
             </Card>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToTickets}>
+          </Pressable>
+          <Pressable onPress={navigateToTickets}>
             <Card style={styles.card}>
               <Card.Content>
                 <FontAwesome
@@ -110,8 +111,8 @@ const DashboardScreen = () => {
                 </Paragraph>
               </Card.Content>
             </Card>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToSettings}>
+          </Pressable>
+          <Pressable onPress={navigateToSettings}>
             <Card style={styles.card}>
               <Card.Content>
                 <FontAwesome
@@ -126,7 +127,7 @@ const DashboardScreen = () => {
                 </Paragraph>
               </Card.Content>
             </Card>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </ScrollView>
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   card: {
-    width: "100%",
+    // width: "100%",
     marginBottom: 20
     // height: 100
   },

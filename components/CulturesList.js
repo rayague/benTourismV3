@@ -4,11 +4,13 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from "react-native";
 import React from "react";
 
 export default function CulturesList() {
+  const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
